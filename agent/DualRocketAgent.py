@@ -1,5 +1,6 @@
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
 from rocket_learn.agent.discrete_policy import DiscretePolicy
+from .DualRocketActionParsers import AerialActionParser, MainActionParser
 from torch.nn import Sequential, Linear
 from torch.optim import Adam
 
@@ -19,9 +20,10 @@ class DualRocketAgent:
 
 class MainNetwork(ActorCriticAgent):
     def __init__(self):
-        split = (98,)
-        actor = DiscretePolicy(Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, 98)), shape=split)
-        critic = Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, 98))
+        action_size = len(MainActionParser.make_lookup_table())
+        split = (action_size,)
+        actor = DiscretePolicy(Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, action_size)), shape=split)
+        critic = Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, action_size))
         optimizer = Adam([
             {"params": self.actor.parameters(), "lr": 1e-5},
             {"params": self.critic.parameters(), "lr": 1e-5}
@@ -32,10 +34,11 @@ class MainNetwork(ActorCriticAgent):
 
 class AerialNetwork(ActorCriticAgent):
     def __init__(self):
-        split = (98,)
-        actor = DiscretePolicy(Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, 98)),
+        action_size = len(AerialActionParser.make_lookup_table())
+        split = (action_size,)
+        actor = DiscretePolicy(Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, action_size)),
                                shape=split)
-        critic = Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, 98))
+        critic = Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, action_size))
         optimizer = Adam([
             {"params": self.actor.parameters(), "lr": 1e-5},
             {"params": self.critic.parameters(), "lr": 1e-5}
