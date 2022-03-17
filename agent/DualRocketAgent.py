@@ -22,11 +22,12 @@ class MainNetwork(ActorCriticAgent):
     def __init__(self):
         action_size = len(MainActionParser.make_lookup_table())
         split = (action_size,)
-        actor = DiscretePolicy(Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, action_size)), shape=split)
+        actor = DiscretePolicy(Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, action_size)),
+                               shape=split)
         critic = Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, action_size))
         optimizer = Adam([
-            {"params": self.actor.parameters(), "lr": 1e-5},
-            {"params": self.critic.parameters(), "lr": 1e-5}
+            {"params": actor.parameters(), "lr": 1e-5},
+            {"params": critic.parameters(), "lr": 1e-5}
         ])
 
         super().__init__(actor, critic, optimizer)
@@ -40,8 +41,8 @@ class AerialNetwork(ActorCriticAgent):
                                shape=split)
         critic = Sequential(Linear(1, 256), Linear(256, 256), Linear(256, 256), Linear(256, action_size))
         optimizer = Adam([
-            {"params": self.actor.parameters(), "lr": 1e-5},
-            {"params": self.critic.parameters(), "lr": 1e-5}
+            {"params": actor.parameters(), "lr": 1e-5},
+            {"params": critic.parameters(), "lr": 1e-5}
         ])
 
         super().__init__(actor, critic, optimizer)
