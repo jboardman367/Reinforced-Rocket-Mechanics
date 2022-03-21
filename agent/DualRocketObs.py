@@ -22,7 +22,8 @@ def _add_player(obs: List, player: PlayerData, inverted: bool):
     obs.extend([
         player.has_flip,
         player.on_ground,
-        player.boost_amount
+        player.boost_amount,
+        player.is_demoed
     ])
 
 
@@ -37,6 +38,7 @@ def _add_blank_player(obs: List):
 
     # Other data
     obs.extend([
+        -1,
         -1,
         -1,
         -1
